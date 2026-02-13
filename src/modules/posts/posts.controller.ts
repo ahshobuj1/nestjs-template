@@ -12,6 +12,7 @@ import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { ResponseMessage } from '../../common/decorators/response-message.decorator';
 
 @ApiTags('posts')
 @Controller('posts')
@@ -19,6 +20,7 @@ export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Post()
+  @ResponseMessage('Post created successfully')
   create(@Body() createPostDto: CreatePostDto) {
     return this.postsService.createPost({
       ...createPostDto,
@@ -27,14 +29,18 @@ export class PostsController {
   }
 
   @Get()
-  findAll(
+  @ResponseMessage('Posts retrieved successfully')
+  async findAll(
     @Query('skip') skip?: string,
     @Query('take') take?: string,
     @Query('search') search?: string,
   ) {
-    return this.postsService.posts({
-      skip: skip ? Number(skip) : undefined,
-      take: take ? Number(take) : undefined,
+    const pageLimit = take ? Number(take) : 10;
+    const offset = skip ? Number(skip) : 0;
+
+    const { data, total } = await this.postsService.posts({
+      skip: offset,
+      take: pageLimit,
       where: search
         ? {
             OR: [
@@ -44,6 +50,23 @@ export class PostsController {
           }
         : undefined,
     });
+
+    const totalPages = Math.ceil(total / pageLimit);
+    const currentPage = Math.floor(offset / pageLimit) + 1;
+
+    return {
+      data,
+      meta: {
+        pagination: {
+          page: currentPage,
+          limit: pageLimit,
+          total,
+          totalPages,
+          hasNext: currentPage < totalPages,
+          hasPrevious: currentPage > 1,
+        },
+      },
+    };
   }
 
   @Get(':id')

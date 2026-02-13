@@ -20,15 +20,20 @@ export class PostsService {
     cursor?: Prisma.PostWhereUniqueInput;
     where?: Prisma.PostWhereInput;
     orderBy?: Prisma.PostOrderByWithRelationInput;
-  }): Promise<Post[]> {
+  }): Promise<{ data: Post[]; total: number }> {
     const { skip, take, cursor, where, orderBy } = params;
-    return this.prisma.post.findMany({
-      skip,
-      take,
-      cursor,
-      where,
-      orderBy,
-    });
+    const [data, total] = await this.prisma.$transaction([
+      this.prisma.post.findMany({
+        skip,
+        take,
+        cursor,
+        where,
+        orderBy,
+      }),
+      this.prisma.post.count({ where }),
+    ]);
+
+    return { data, total };
   }
 
   async createPost(data: Prisma.PostCreateInput): Promise<Post> {
