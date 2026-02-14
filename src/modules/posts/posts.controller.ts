@@ -23,9 +23,10 @@ export class PostsController {
   @Post()
   @ResponseMessage('Post created successfully')
   create(@Body() createPostDto: CreatePostDto) {
+    const { authorId, ...rest } = createPostDto;
     return this.postsService.createPost({
-      ...createPostDto,
-      author: { connect: { id: createPostDto.authorId } },
+      ...rest,
+      author: { connect: { id: authorId } },
     });
   }
 
@@ -42,10 +43,13 @@ export class PostsController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-    const { ...rest } = updatePostDto;
+    const { authorId, ...rest } = updatePostDto;
     return this.postsService.updatePost({
       where: { id: Number(id) },
-      data: rest,
+      data: {
+        ...rest,
+        ...(authorId ? { author: { connect: { id: authorId } } } : {}),
+      },
     });
   }
 
