@@ -11,7 +11,6 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { GetUsersDto } from './dto/get-users.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { ResponseMessage } from '../../common/decorators/response-message.decorator';
 
@@ -28,7 +27,7 @@ export class UsersController {
 
   @Get()
   @ResponseMessage('Users retrieved successfully')
-  findAll(@Query() query: GetUsersDto) {
+  findAll(@Query() query: Record<string, any>) {
     return this.usersService.findAll(query);
   }
 

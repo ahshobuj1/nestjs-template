@@ -19,7 +19,11 @@ export class PostsService {
       .filter()
       .sort()
       .pagination()
-      .include({
+      .select({
+        id: true,
+        title: true,
+        content: false,
+
         author: {
           select: {
             id: true,
