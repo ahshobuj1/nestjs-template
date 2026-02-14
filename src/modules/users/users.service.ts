@@ -39,17 +39,30 @@ export class UsersService {
         }
       : {};
 
-    const [data, total] = await Promise.all([
+    const [users, total] = await Promise.all([
       this.prisma.user.findMany({
         skip: offset,
         take: limit,
         where,
         orderBy: { id: 'desc' },
+        include: {
+          _count: {
+            select: {
+              posts: true,
+            },
+          },
+        },
       }),
       this.prisma.user.count({ where }),
     ]);
 
     const pagination = createPaginationMeta({ page, limit, total });
+
+    // Transform result to rename _count.posts → posts
+    const data = users.map(({ _count, ...user }) => ({
+      ...user,
+      posts: _count.posts,
+    }));
 
     return {
       data,

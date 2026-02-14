@@ -11,7 +11,6 @@ import {
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { GetPostsDto } from './dto/get-posts.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { ResponseMessage } from '../../common/decorators/response-message.decorator';
 
@@ -32,7 +31,7 @@ export class PostsController {
 
   @Get()
   @ResponseMessage('Posts retrieved successfully')
-  findAll(@Query() query: GetPostsDto) {
+  findAll(@Query() query: Record<string, any>) {
     return this.postsService.posts(query);
   }
 

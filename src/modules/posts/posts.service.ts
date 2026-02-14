@@ -1,58 +1,39 @@
 import { Injectable } from '@nestjs/common';
 import { Post, Prisma } from '../../../generated/prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
-import {
-  createPaginationMeta,
-  PaginationMeta,
-} from '../../common/helpers/pagination.helper';
-import { GetPostsDto } from './dto/get-posts.dto';
+import { QueryBuilder } from '../../common/builder/QueryBuilder';
 
 @Injectable()
 export class PostsService {
   constructor(private prisma: PrismaService) {}
 
-  async post(
-    postWhereUniqueInput: Prisma.PostWhereUniqueInput,
-  ): Promise<Post | null> {
+  async post(postWhereUniqueInput: Prisma.PostWhereUniqueInput) {
     return this.prisma.post.findUnique({
       where: postWhereUniqueInput,
     });
   }
 
-  async posts(
-    params: GetPostsDto,
-  ): Promise<{ data: Post[]; meta: { pagination: PaginationMeta } }> {
-    const { skip, take, search } = params;
-    const limit = take ?? 10;
-    const offset = skip ?? 0;
-    const page = Math.floor(offset / limit) + 1;
+  async posts(query: Record<string, any>) {
+    const queryBuilder = new QueryBuilder(this.prisma.post, query)
+      .search(['title', 'content'])
+      .filter()
+      .sort()
+      .pagination()
+      .include({
+        author: {
+          select: {
+            id: true,
+            email: true,
+          },
+        },
+      });
 
-    const where: Prisma.PostWhereInput = search
-      ? {
-          OR: [
-            { title: { contains: search, mode: 'insensitive' } }, // Added mode: 'insensitive' for better search
-            { content: { contains: search, mode: 'insensitive' } }, // Added mode: 'insensitive' for better search
-          ],
-        }
-      : {};
-
-    const [data, total] = await Promise.all([
-      this.prisma.post.findMany({
-        skip: offset,
-        take: limit,
-        where,
-        orderBy: { id: 'desc' }, // Default ordering
-      }),
-      this.prisma.post.count({ where }),
-    ]);
-
-    const pagination = createPaginationMeta({ page, limit, total });
+    const data = await queryBuilder.exec();
+    const meta = await queryBuilder.countTotal();
 
     return {
       data,
-      meta: {
-        pagination,
-      },
+      meta,
     };
   }
 
