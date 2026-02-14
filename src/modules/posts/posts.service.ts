@@ -1,6 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Post, Prisma } from '../../../generated/prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import {
+  createPaginationMeta,
+  PaginationMeta,
+} from '../../common/helpers/pagination.helper';
+import { GetPostsDto } from './dto/get-posts.dto';
 
 @Injectable()
 export class PostsService {
@@ -14,26 +19,41 @@ export class PostsService {
     });
   }
 
-  async posts(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.PostWhereUniqueInput;
-    where?: Prisma.PostWhereInput;
-    orderBy?: Prisma.PostOrderByWithRelationInput;
-  }): Promise<{ data: Post[]; total: number }> {
-    const { skip, take, cursor, where, orderBy } = params;
-    const [data, total] = await this.prisma.$transaction([
+  async posts(
+    params: GetPostsDto,
+  ): Promise<{ data: Post[]; meta: { pagination: PaginationMeta } }> {
+    const { skip, take, search } = params;
+    const limit = take ?? 10;
+    const offset = skip ?? 0;
+    const page = Math.floor(offset / limit) + 1;
+
+    const where: Prisma.PostWhereInput = search
+      ? {
+          OR: [
+            { title: { contains: search, mode: 'insensitive' } }, // Added mode: 'insensitive' for better search
+            { content: { contains: search, mode: 'insensitive' } }, // Added mode: 'insensitive' for better search
+          ],
+        }
+      : {};
+
+    const [data, total] = await Promise.all([
       this.prisma.post.findMany({
-        skip,
-        take,
-        cursor,
+        skip: offset,
+        take: limit,
         where,
-        orderBy,
+        orderBy: { id: 'desc' }, // Default ordering
       }),
       this.prisma.post.count({ where }),
     ]);
 
-    return { data, total };
+    const pagination = createPaginationMeta({ page, limit, total });
+
+    return {
+      data,
+      meta: {
+        pagination,
+      },
+    };
   }
 
   async createPost(data: Prisma.PostCreateInput): Promise<Post> {

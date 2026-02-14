@@ -6,11 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { GetUsersDto } from './dto/get-users.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { ResponseMessage } from '../../common/decorators/response-message.decorator';
 
 @ApiTags('users')
 @Controller('users')
@@ -18,17 +21,20 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
+  @ResponseMessage('User has been created successfully')
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  @ResponseMessage('Users retrieved successfully')
+  findAll(@Query() query: GetUsersDto) {
+    return this.usersService.findAll(query);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  @ResponseMessage('User retrieved successfully')
+  findSingleUser(@Param('id') id: string) {
     return this.usersService.findOne(+id);
   }
 

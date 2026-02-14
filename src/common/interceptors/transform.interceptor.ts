@@ -2,10 +2,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import {
-    Injectable,
-    NestInterceptor,
-    ExecutionContext,
-    CallHandler,
+  Injectable,
+  NestInterceptor,
+  ExecutionContext,
+  CallHandler,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
@@ -15,54 +15,54 @@ import { ApiResponse } from '../interfaces/api-response.interface';
 
 @Injectable()
 export class TransformInterceptor<T> implements NestInterceptor<
-    T,
-    ApiResponse<T>
+  T,
+  ApiResponse<T>
 > {
-    constructor(private reflector: Reflector) { }
+  constructor(private reflector: Reflector) {}
 
-    intercept(
-        context: ExecutionContext,
-        next: CallHandler,
-    ): Observable<ApiResponse<T>> {
-        return next.handle().pipe(
-            map((data) => {
-                const message =
-                    this.reflector.get<string>(
-                        RESPONSE_MESSAGE_KEY,
-                        context.getHandler(),
-                    ) || 'Operation successful';
+  intercept(
+    context: ExecutionContext,
+    next: CallHandler,
+  ): Observable<ApiResponse<T>> {
+    return next.handle().pipe(
+      map((data) => {
+        const message =
+          this.reflector.get<string>(
+            RESPONSE_MESSAGE_KEY,
+            context.getHandler(),
+          ) || 'Operation successful';
 
-                const request = context.switchToHttp().getRequest();
-                const requestId =
-                    request.headers['x-request-id'] || crypto.randomUUID();
+        const request = context.switchToHttp().getRequest();
+        const requestId =
+          request.headers['x-request-id'] || crypto.randomUUID();
 
-                // Check if data already has meta (e.g. pagination)
-                const hasMeta =
-                    data && typeof data === 'object' && 'meta' in data && 'data' in data;
+        // Check if data already has meta (e.g. pagination)
+        const hasMeta =
+          data && typeof data === 'object' && 'meta' in data && 'data' in data;
 
-                if (hasMeta) {
-                    return {
-                        success: true,
-                        message,
-                        meta: {
-                            requestId,
-                            timestamp: new Date().toISOString(),
-                            ...data.meta,
-                        },
-                        data: data.data,
-                    };
-                }
+        if (hasMeta) {
+          return {
+            success: true,
+            message,
+            meta: {
+              requestId,
+              timestamp: new Date().toISOString(),
+              ...data.meta,
+            },
+            data: data.data,
+          };
+        }
 
-                return {
-                    success: true,
-                    message,
-                    //   meta: {
-                    //     requestId,
-                    //     timestamp: new Date().toISOString(),
-                    //   },
-                    data,
-                };
-            }),
-        );
-    }
+        return {
+          success: true,
+          message,
+          //   meta: {
+          //     requestId,
+          //     timestamp: new Date().toISOString(),
+          //   },
+          data,
+        };
+      }),
+    );
+  }
 }

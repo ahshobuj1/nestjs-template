@@ -2,8 +2,8 @@
 
 import {
   IsBoolean,
-  IsEmail,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
 } from 'class-validator';
@@ -27,6 +27,6 @@ export class CreatePostDto {
 
   @ApiProperty({ example: 'user@example.com' })
   @IsNotEmpty()
-  @IsEmail()
-  authorEmail: string;
+  @IsNumber()
+  authorId: number;
 }
