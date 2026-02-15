@@ -37,4 +37,33 @@ export class CategoryService {
       meta,
     };
   }
+
+  async updateCategory(id: string, data: CreateCategoryDto) {
+    const category = await this.prisma.category.findUnique({
+      where: { id },
+    });
+
+    if (!category) {
+      throw new ConflictException('Category not found');
+    }
+
+    return this.prisma.category.update({
+      where: { id },
+      data,
+    });
+  }
+
+  async deleteCategory(id: string) {
+    const category = await this.prisma.category.findUnique({
+      where: { id },
+    });
+
+    if (!category) {
+      throw new ConflictException('Category not found');
+    }
+
+    return this.prisma.category.delete({
+      where: { id },
+    });
+  }
 }
