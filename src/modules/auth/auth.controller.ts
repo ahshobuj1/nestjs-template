@@ -57,13 +57,15 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const user = req.user as any;
+    // console.log(req.user, 'refreshToken', req.cookies.refreshToken);
 
-    const tokens = await this.auth.refresh(user.sub, req.cookies.refreshToken);
+    const result = await this.auth.refresh(user.id, req.cookies.refreshToken);
 
-    res.cookie('refreshToken', tokens.refreshToken);
+    res.cookie('refreshToken', result.refreshToken);
 
     return {
-      accessToken: tokens.accessToken,
+      user: result.user,
+      accessToken: result.accessToken,
     };
   }
 }

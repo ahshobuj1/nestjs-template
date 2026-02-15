@@ -68,10 +68,12 @@ export class AuthService {
     return result;
   }
 
-  async refresh(userId: string, token: string) {
+  async refresh(id: string, token: string) {
     const user = await this.prisma.user.findUnique({
-      where: { id: userId },
+      where: { id },
     });
+
+    // console.log(id, token, user);
 
     if (!user?.refreshToken) throw new UnauthorizedException();
 
@@ -79,7 +81,17 @@ export class AuthService {
 
     if (!match) throw new UnauthorizedException();
 
-    return this.generateTokens(user);
+    // return this.generateTokens(user);
+
+    const tokens = await this.generateTokens(user);
+
+    const result = {
+      user,
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+    };
+
+    return result;
   }
 
   async generateTokens(user: any) {
@@ -87,7 +99,7 @@ export class AuthService {
 
     const accessToken = await this.jwt.signAsync(payload, {
       secret: 'ACCESS_SECRET',
-      expiresIn: '15m',
+      expiresIn: '1m',
     });
 
     const refreshToken = await this.jwt.signAsync(payload, {
