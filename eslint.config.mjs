@@ -29,7 +29,19 @@ export default tseslint.config(
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-floating-promises': 'warn',
       '@typescript-eslint/no-unsafe-argument': 'warn',
-      "prettier/prettier": ["error", { endOfLine: "auto" }],
+      'prettier/prettier': ['error', { endOfLine: 'auto' }],
     },
+
+    //  rules: {
+    //   '@typescript-eslint/no-explicit-any': 'off',
+    //   '@typescript-eslint/no-floating-promises': 'warn',
+
+    //   // disable these 3 rules
+    //   '@typescript-eslint/no-unsafe-member-access': 'off',
+    //   '@typescript-eslint/no-unsafe-argument': 'off',
+    //   '@typescript-eslint/no-unsafe-assignment': 'off',
+
+    //   'prettier/prettier': ['error', { endOfLine: 'auto' }],
+    // },
   },
 );

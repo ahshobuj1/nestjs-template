@@ -1,6 +1,6 @@
 generator client {
   provider     = "prisma-client"
-  output       = "../generated/prisma"
+  output       = "./generated/prisma"
   moduleFormat = "cjs"
 }
 
@@ -8,18 +8,88 @@ datasource db {
   provider = "postgresql"
 }
 
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  posts Post[]
+//** Schema here
+
+enum UserRole {
+  ADMIN
+  SELLER
+  USER
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean? @default(false)
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  Int?
+enum AccountStatus {
+  ACTIVE
+  BLOCKED
+}
+
+model User {
+  id       String @id @default(uuid())
+  name     String
+  username String @unique
+  email    String @unique
+  password String
+
+  avatarUrl   String?
+  dateOfBirth DateTime?
+
+  // Status & Role
+  role       UserRole      @default(USER)
+  status     AccountStatus @default(ACTIVE)
+  isVerified Boolean       @default(false)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  isDeleted Boolean   @default(false)
+  products  Product[]
+
+  // Indexes for optimization
+  @@index([email])
+  @@index([username])
+  @@index([status])
+  @@index([createdAt])
+  @@map("users") // Better table naming convention
+}
+
+model Category {
+  id   String @id @default(uuid())
+  name String
+  slug String @unique
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  products  Product[]
+
+  @@index([name])
+  @@map("categories")
+}
+
+model Product {
+  id          String  @id @default(uuid())
+  name        String
+  slug        String  @unique
+  description String? @db.Text
+
+  price     Decimal  @db.Decimal(10, 2)
+  salePrice Decimal? @db.Decimal(10, 2)
+
+  sku         String?  @unique
+  stock       Int      @default(0)
+  thumbnail   String?
+  images      String[]
+  brand       String?
+  isPublished Boolean  @default(true)
+  isFeatured  Boolean  @default(false)
+  tags        String[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  isDeleted Boolean   @default(false)
+
+  categoryId String
+  category   Category? @relation(fields: [categoryId], references: [id])
+
+  authorId String
+  author   User?  @relation(fields: [authorId], references: [id])
+
+  @@map("products")
 }

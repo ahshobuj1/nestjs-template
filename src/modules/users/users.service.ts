@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-
 import { ConflictException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -16,8 +13,16 @@ export class UsersService {
       where: { email: createUserDto.email },
     });
 
+    const existingUsername = await this.prisma.user.findUnique({
+      where: { username: createUserDto.username },
+    });
+
     if (existingUser) {
       throw new ConflictException('User with this email already exists');
+    }
+
+    if (existingUsername) {
+      throw new ConflictException('User with this username already exists');
     }
 
     return this.prisma.user.create({
@@ -27,29 +32,16 @@ export class UsersService {
 
   async findAll(query: Record<string, any>) {
     const queryBuilder = new QueryBuilder(this.prisma.user, query)
-      .search(['email', 'name'])
+      .search(['email', 'username', 'name'])
       .filter()
       .sort()
-      .pagination()
-      .include({
-        _count: {
-          select: {
-            posts: true,
-          },
-        },
-      });
+      .pagination();
 
     const users = await queryBuilder.exec();
     const meta = await queryBuilder.countTotal();
 
-    // Transform result to rename _count.posts → posts
-    const data = users.map(({ _count, ...user }) => ({
-      ...user,
-      post: _count.posts,
-    }));
-
     return {
-      data,
+      data: users,
       meta,
     };
   }
@@ -102,22 +94,90 @@ export class UsersService {
   //   };
   // }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return this.prisma.user.findUnique({
       where: { id },
     });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
+  update(id: string, updateUserDto: UpdateUserDto) {
     return this.prisma.user.update({
       where: { id },
       data: updateUserDto,
     });
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return this.prisma.user.delete({
       where: { id },
     });
   }
 }
+
+// import { Injectable } from '@nestjs/common';
+
+// import { PrismaService } from '../prisma/prisma.service';
+// import { QueryBuilder } from '../../common/builder/QueryBuilder';
+// import { Post, Prisma } from 'prisma/generated/prisma/client';
+
+// @Injectable()
+// export class PostsService {
+//   constructor(private prisma: PrismaService) {}
+
+//   async post(postWhereUniqueInput: Prisma.PostWhereUniqueInput) {
+//     return this.prisma.post.findUnique({
+//       where: postWhereUniqueInput,
+//     });
+//   }
+
+//   async posts(query: Record<string, any>) {
+//     const queryBuilder = new QueryBuilder(this.prisma.post, query)
+//       .search(['title', 'content'])
+//       .filter()
+//       .sort()
+//       .pagination()
+//       .select({
+//         id: true,
+//         title: true,
+//         content: false,
+
+//         author: {
+//           select: {
+//             id: true,
+//             email: true,s
+//           },
+//         },
+//       });
+
+//     const data = await queryBuilder.exec();
+//     const meta = await queryBuilder.countTotal();
+
+//     return {
+//       data,
+//       meta,
+//     };
+//   }
+
+//   async createPost(data: Prisma.PostCreateInput): Promise<Post> {
+//     return this.prisma.post.create({
+//       data,
+//     });
+//   }
+
+//   async updatePost(params: {
+//     where: Prisma.PostWhereUniqueInput;
+//     data: Prisma.PostUpdateInput;
+//   }): Promise<Post> {
+//     const { data, where } = params;
+//     return this.prisma.post.update({
+//       data,
+//       where,
+//     });
+//   }
+
+//   async deletePost(where: Prisma.PostWhereUniqueInput): Promise<Post> {
+//     return this.prisma.post.delete({
+//       where,
+//     });
+//   }
+// }

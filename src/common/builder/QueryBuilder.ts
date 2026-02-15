@@ -1,11 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-redundant-type-constituents */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/require-await */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { Prisma } from 'generated/prisma/client';
 
 export class QueryBuilder<T> {
   private model: any;
@@ -114,7 +112,7 @@ export class QueryBuilder<T> {
     return this;
   }
 
-  include(include: Prisma.PostInclude | any) {
+  include(include: any) {
     this.includeValue = include;
     return this;
   }
