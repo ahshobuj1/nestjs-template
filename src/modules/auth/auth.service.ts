@@ -3,6 +3,7 @@ import {
   ConflictException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 import { JwtService } from '@nestjs/jwt';
 
@@ -16,6 +17,7 @@ export class AuthService {
   constructor(
     private prisma: PrismaService,
     private jwt: JwtService,
+    private configService: ConfigService,
   ) {}
 
   async register(dto: CreateUserDto) {
@@ -98,13 +100,13 @@ export class AuthService {
     const payload = { id: user.id, email: user.email, role: user.role };
 
     const accessToken = await this.jwt.signAsync(payload, {
-      secret: 'ACCESS_SECRET',
-      expiresIn: '1m',
+      secret: this.configService.get<string>('ACCESS_TOKEN_SECRET'),
+      expiresIn: this.configService.get<number>('ACCESS_TOKEN_EXPIRES_IN'),
     });
 
     const refreshToken = await this.jwt.signAsync(payload, {
-      secret: 'REFRESH_SECRET',
-      expiresIn: '7d',
+      secret: this.configService.get<string>('REFRESH_TOKEN_SECRET')!,
+      expiresIn: this.configService.get<number>('REFRESH_TOKEN_EXPIRES_IN')!,
     });
 
     const hash = await bcrypt.hash(refreshToken, 10);
