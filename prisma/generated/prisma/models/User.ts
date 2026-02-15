@@ -38,6 +38,7 @@ export type UserMinAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   isDeleted: boolean | null
+  refreshToken: string | null
 }
 
 export type UserMaxAggregateOutputType = {
@@ -54,6 +55,7 @@ export type UserMaxAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   isDeleted: boolean | null
+  refreshToken: string | null
 }
 
 export type UserCountAggregateOutputType = {
@@ -70,6 +72,7 @@ export type UserCountAggregateOutputType = {
   createdAt: number
   updatedAt: number
   isDeleted: number
+  refreshToken: number
   _all: number
 }
 
@@ -88,6 +91,7 @@ export type UserMinAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   isDeleted?: true
+  refreshToken?: true
 }
 
 export type UserMaxAggregateInputType = {
@@ -104,6 +108,7 @@ export type UserMaxAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   isDeleted?: true
+  refreshToken?: true
 }
 
 export type UserCountAggregateInputType = {
@@ -120,6 +125,7 @@ export type UserCountAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   isDeleted?: true
+  refreshToken?: true
   _all?: true
 }
 
@@ -209,6 +215,7 @@ export type UserGroupByOutputType = {
   createdAt: Date
   updatedAt: Date
   isDeleted: boolean
+  refreshToken: string | null
   _count: UserCountAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
@@ -246,6 +253,7 @@ export type UserWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   isDeleted?: Prisma.BoolFilter<"User"> | boolean
+  refreshToken?: Prisma.StringNullableFilter<"User"> | string | null
   products?: Prisma.ProductListRelationFilter
 }
 
@@ -263,6 +271,7 @@ export type UserOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
+  refreshToken?: Prisma.SortOrderInput | Prisma.SortOrder
   products?: Prisma.ProductOrderByRelationAggregateInput
 }
 
@@ -283,6 +292,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   isDeleted?: Prisma.BoolFilter<"User"> | boolean
+  refreshToken?: Prisma.StringNullableFilter<"User"> | string | null
   products?: Prisma.ProductListRelationFilter
 }, "id" | "username" | "email">
 
@@ -300,6 +310,7 @@ export type UserOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
+  refreshToken?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
   _min?: Prisma.UserMinOrderByAggregateInput
@@ -322,6 +333,7 @@ export type UserScalarWhereWithAggregatesInput = {
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   isDeleted?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
+  refreshToken?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
 }
 
 export type UserCreateInput = {
@@ -338,6 +350,7 @@ export type UserCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   isDeleted?: boolean
+  refreshToken?: string | null
   products?: Prisma.ProductCreateNestedManyWithoutAuthorInput
 }
 
@@ -355,6 +368,7 @@ export type UserUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   isDeleted?: boolean
+  refreshToken?: string | null
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutAuthorInput
 }
 
@@ -372,6 +386,7 @@ export type UserUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   products?: Prisma.ProductUpdateManyWithoutAuthorNestedInput
 }
 
@@ -389,6 +404,7 @@ export type UserUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   products?: Prisma.ProductUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
@@ -406,6 +422,7 @@ export type UserCreateManyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   isDeleted?: boolean
+  refreshToken?: string | null
 }
 
 export type UserUpdateManyMutationInput = {
@@ -422,6 +439,7 @@ export type UserUpdateManyMutationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UserUncheckedUpdateManyInput = {
@@ -438,6 +456,7 @@ export type UserUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UserCountOrderByAggregateInput = {
@@ -454,6 +473,7 @@ export type UserCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
+  refreshToken?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -470,6 +490,7 @@ export type UserMaxOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
+  refreshToken?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
@@ -486,6 +507,7 @@ export type UserMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
+  refreshToken?: Prisma.SortOrder
 }
 
 export type UserNullableScalarRelationFilter = {
@@ -551,6 +573,7 @@ export type UserCreateWithoutProductsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   isDeleted?: boolean
+  refreshToken?: string | null
 }
 
 export type UserUncheckedCreateWithoutProductsInput = {
@@ -567,6 +590,7 @@ export type UserUncheckedCreateWithoutProductsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   isDeleted?: boolean
+  refreshToken?: string | null
 }
 
 export type UserCreateOrConnectWithoutProductsInput = {
@@ -599,6 +623,7 @@ export type UserUpdateWithoutProductsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UserUncheckedUpdateWithoutProductsInput = {
@@ -615,6 +640,7 @@ export type UserUncheckedUpdateWithoutProductsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -662,6 +688,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   createdAt?: boolean
   updatedAt?: boolean
   isDeleted?: boolean
+  refreshToken?: boolean
   products?: boolean | Prisma.User$productsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
@@ -680,6 +707,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   createdAt?: boolean
   updatedAt?: boolean
   isDeleted?: boolean
+  refreshToken?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -696,6 +724,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   createdAt?: boolean
   updatedAt?: boolean
   isDeleted?: boolean
+  refreshToken?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
@@ -712,9 +741,10 @@ export type UserSelectScalar = {
   createdAt?: boolean
   updatedAt?: boolean
   isDeleted?: boolean
+  refreshToken?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "username" | "email" | "password" | "avatarUrl" | "dateOfBirth" | "role" | "status" | "isVerified" | "createdAt" | "updatedAt" | "isDeleted", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "username" | "email" | "password" | "avatarUrl" | "dateOfBirth" | "role" | "status" | "isVerified" | "createdAt" | "updatedAt" | "isDeleted" | "refreshToken", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   products?: boolean | Prisma.User$productsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -741,6 +771,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     createdAt: Date
     updatedAt: Date
     isDeleted: boolean
+    refreshToken: string | null
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -1178,6 +1209,7 @@ export interface UserFieldRefs {
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly isDeleted: Prisma.FieldRef<"User", 'Boolean'>
+  readonly refreshToken: Prisma.FieldRef<"User", 'String'>
 }
     
 
