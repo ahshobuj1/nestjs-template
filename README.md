@@ -50,7 +50,7 @@ A starter backend template built with NestJS, Prisma, and JWT Authentication. Th
 1. **Clone the repository**:
 
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/ahshobuj1/nestjs-template.git
    cd nestjs-template
    ```
 
