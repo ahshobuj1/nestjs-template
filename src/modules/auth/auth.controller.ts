@@ -6,9 +6,7 @@ import { AuthService } from './auth.service';
 import { RefreshGuard } from 'src/common/guards/refresh.guard';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
-import { Public } from 'src/common/decorators/public.decorator';
 
-@Public()
 @Controller('auth')
 export class AuthController {
   constructor(private auth: AuthService) {}

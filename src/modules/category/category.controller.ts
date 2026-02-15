@@ -12,7 +12,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { CategoryService } from './category.service';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
 import { CreateCategoryDto } from './dto/create-category-dto';
-// import { Public } from 'src/common/decorators/public.decorator';
+
 import { UserRole } from 'prisma/generated/prisma/enums';
 import { Auth } from 'src/common/decorators/auth.decorator';
 
@@ -28,7 +28,6 @@ export class CategoryController {
     return this.categoryService.createCategory(data);
   }
 
-  // @Public()
   @Get()
   @Auth(UserRole.ADMIN, UserRole.USER)
   @ResponseMessage('Categories are retrieved successfully!')
