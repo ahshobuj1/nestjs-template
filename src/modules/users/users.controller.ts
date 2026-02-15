@@ -13,7 +13,10 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { ResponseMessage } from '../../common/decorators/response-message.decorator';
+// import { Roles } from '../../common/decorators/roles.decorator';
+// import { UserRole } from 'prisma/generated/prisma/enums';
 
+// @Roles(UserRole.ADMIN)
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
